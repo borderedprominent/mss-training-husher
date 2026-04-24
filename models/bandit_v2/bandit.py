@@ -3,7 +3,13 @@ from typing import Dict, List, Optional
 import torch
 import torchaudio as ta
 from torch import nn
-import pytorch_lightning as pl
+
+# Use nn.Module for inference (pytorch_lightning only needed for training)
+try:
+    import pytorch_lightning as pl
+    _BaseModule = pl.LightningModule
+except ImportError:
+    _BaseModule = nn.Module
 
 from .bandsplit import BandSplitModule
 from .maskestim import OverlappingMaskEstimationModule
@@ -12,7 +18,7 @@ from .utils import MusicalBandsplitSpecification
 
 
 
-class BaseEndToEndModule(pl.LightningModule):
+class BaseEndToEndModule(_BaseModule):
     def __init__(
         self,
     ) -> None:
